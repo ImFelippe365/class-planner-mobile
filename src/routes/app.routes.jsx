@@ -1,9 +1,10 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 
+import Home from "./../pages/Home/index";
 import Profile from "./../pages/Profile/index";
 import theme from "./../styles/theme";
-import { User } from "react-native-feather";
+import { Calendar, User } from "react-native-feather";
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -25,6 +26,13 @@ const TabNavigation = () => (
     }}
   >
     <Tab.Screen
+      name="Home"
+      component={Home}
+      options={{
+        tabBarIcon: ({ color }) => <Calendar color={color} fill={color + "20"} />,
+      }}
+    />
+    <Tab.Screen
       name="Profile"
       component={Profile}
       options={{
@@ -42,7 +50,7 @@ const AppRoutes = () => {
         headerShown: false,
       }}
     >
-      <Stack.Screen name="Home" component={TabNavigation} />
+      <Stack.Screen name="Tabs" component={TabNavigation} />
     </Stack.Navigator>
   );
 };
