@@ -14,7 +14,7 @@
 	  "no-duplicate-imports": "warn",
 	  "no-shadow": "off",
 	  "no-unused-vars": "warn",
-	  
+	  "no-console": "warn"
 	},
 	"plugins": ["react", "import", "jsx-a11y"],
 	"parserOptions": {
