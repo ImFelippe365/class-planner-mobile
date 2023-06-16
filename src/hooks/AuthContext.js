@@ -1,20 +1,104 @@
 import { createContext, useCallback, useContext, useEffect, useState } from "react";
-import { suapApi } from '../services/api'
+import api, { suapApi } from '../services/api'
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useStudent } from "./StudentContext";
 
 const AuthContext = createContext({});
 
 const AuthProvider = ({ children }) => {
+
+	const { setStudent } = useStudent();
+
 	const [user, setUser] = useState();
+
+	const registerStudent = useCallback(async (new_student) => {
+		try {
+			const { data } = await api.post('students/', new_student);
+
+			return data[0];
+		} catch (error) {
+			console.warn('Erro ao tentar cadastrar estudante ->', error)
+		}
+	}, []);
+
+	const getStudentIsRegistered = useCallback(async (registration) => {
+		try {
+			const { data } = await api.get(`students/byregistration/${registration}/`);
+
+			if (data?.details == 'Não encontrado') return false
+
+			return data;
+		} catch (error) {
+			console.warn('Erro ao tentar verificar se estudante está registrado ->', JSON.stringify(error))
+		}
+	}, []);
 
 	const getStudentProfile = useCallback(async () => {
 		try {
 			const { data } = await suapApi.get('minhas-informacoes/meus-dados/');
 
-			setUser(data)
-			await AsyncStorage.setItem('@ClassPlanner:user', JSON.stringify(data))
+			if (data.tipo_vinculo !== "Aluno") {
+				console.warn('Apenas estudantes podem se autenticar')
+				return;
+			}
+
+			let student = await getStudentIsRegistered(data.vinculo.matricula);
+			
+			if (!student) {
+				const periods = await getReferencePeriods();
+				const { ano_letivo, periodo_letivo } = periods.at(-1);
+
+				const virtualClasses = await getVirtualClasses(ano_letivo, periodo_letivo);
+				const disciplines = virtualClasses.map(({ sigla }) => sigla);
+				const student_course = data.vinculo.curso;
+
+				student = await registerStudent({
+					"registration": data.vinculo.matricula,
+					"name": data.nome_usual,
+					"course": student_course,
+					"shift": "Tarde",
+					"email": data.email,
+					"disciplines": disciplines
+				})
+			}
+
+			await AsyncStorage.setItem('@ClassPlanner:user', JSON.stringify(data));
+			await AsyncStorage.setItem('@ClassPlanner:student', JSON.stringify(student));
+
+			setUser(data);
+			setStudent(student);
 		} catch (error) {
 			console.log('Erro ao tentar pegar o perfil do usuário ->', error)
+		}
+	}, []);
+
+	const getReferencePeriods = useCallback(async () => {
+		try {
+			const { data } = await suapApi.get('minhas-informacoes/meus-periodos-letivos/');
+
+			return data;
+		} catch (error) {
+			console.log('Erro ao tentar requisitar os periodos letivos do estudante ->', error)
+		}
+	}, []);
+
+	const getVirtualClasses = useCallback(async (year, period) => {
+		try {
+			const { data } = await suapApi.get(`minhas-informacoes/turmas-virtuais/${year}/${period}/`);
+
+			return data;
+		} catch (error) {
+			console.log('Erro ao tentar requisitar as turmas virtuais ->', error)
+		}
+	}, []);
+
+	const getVirtuaClassDetails = useCallback(async (id) => {
+		try {
+			const { data } = await suapApi.get(`minhas-informacoes/turma-virtual/${id}/`);
+
+			return data;
+		} catch (error) {
+			console.log('Erro ao tentar requisitar a turma virtual ->', error)
 		}
 	}, []);
 
@@ -32,17 +116,18 @@ const AuthProvider = ({ children }) => {
 				['@ClassPlanner:refresh', data.refresh]
 			])
 
-			getStudentProfile()
+			getStudentProfile();
 		} catch (error) {
-			console.log('Erro ao tentar fazer login ->', JSON.stringify(error.response))
+			console.log('Erro ao tentar fazer login ->', JSON.stringify(error))
 		}
 	}, []);
 
 	const logout = useCallback(async () => {
 		setUser(undefined);
+		setStudent(undefined);
 
 		await AsyncStorage.multiRemove(
-			['@ClassPlanner:token', '@ClassPlanner:refresh']
+			['@ClassPlanner:user', '@ClassPlanner:student', '@ClassPlanner:token', '@ClassPlanner:refresh']
 		)
 	}, []);
 
@@ -63,7 +148,10 @@ const AuthProvider = ({ children }) => {
 				user,
 				setUser,
 				login,
-				logout
+				logout,
+				getReferencePeriods,
+				getVirtuaClassDetails,
+				getVirtualClasses
 			}}
 		>
 			{children}
