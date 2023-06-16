@@ -7,6 +7,7 @@ import {
 } from "@expo-google-fonts/inter"
 import { AuthProvider } from "./src/hooks/AuthContext"
 import Routes from "./src/routes"
+import { StudentProvider } from "./src/hooks/StudentContext"
 
 export default function App() {
 	let [fontsLoaded] = useFonts({
@@ -20,9 +21,11 @@ export default function App() {
 	}
 
 	return (
-		<AuthProvider>
-			<StatusBar style="auto" />
-			<Routes />
-		</AuthProvider>
+		<StudentProvider>
+			<AuthProvider>
+				<StatusBar style="auto" />
+				<Routes />
+			</AuthProvider>
+		</StudentProvider>
 	)
 }

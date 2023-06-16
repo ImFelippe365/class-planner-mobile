@@ -7,12 +7,24 @@ import theme from "../../styles/theme";
 import styles from "./styles";
 import DayCard from "../../components/DayCard";
 import ClassCard from "../../components/ClassCard";
+import { useAuth } from "../../hooks/AuthContext";
+import { useEffect } from "react";
 
 const Home = () => {
+	const { getReferencePeriods, getVirtuaClassDetails, getVirtuaClasses } =
+		useAuth();
+
 	const todayDate = formatDate(new Date(), {
 		month: "long",
 		day: "numeric",
 	});
+
+	const teste = async () => {
+	};
+
+	useEffect(() => {
+		teste();
+	}, []);
 
 	return (
 		<View style={globalStyles.container}>
