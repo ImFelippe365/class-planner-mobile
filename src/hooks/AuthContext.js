@@ -7,7 +7,7 @@ const AuthContext = createContext({});
 
 const AuthProvider = ({ children }) => {
 
-	const { setStudent } = useStudent();
+	const { getDisciplines, getWeekSchedules, getMonthSchedules, setStudent } = useStudent();
 
 	const [user, setUser] = useState();
 
@@ -43,7 +43,7 @@ const AuthProvider = ({ children }) => {
 			}
 
 			let student = await getStudentIsRegistered(data.vinculo.matricula);
-			
+
 			if (!student) {
 				const periods = await getReferencePeriods();
 				const { ano_letivo, periodo_letivo } = periods.at(-1);
@@ -61,12 +61,17 @@ const AuthProvider = ({ children }) => {
 					"disciplines": disciplines
 				})
 			}
+			setUser(data);
+			setStudent(student);
 
 			await AsyncStorage.setItem('@ClassPlanner:user', JSON.stringify(data));
 			await AsyncStorage.setItem('@ClassPlanner:student', JSON.stringify(student));
 
-			setUser(data);
-			setStudent(student);
+
+			getDisciplines();
+			getWeekSchedules();
+			getMonthSchedules();
+
 		} catch (error) {
 			console.log('Erro ao tentar pegar o perfil do usuário ->', error)
 		}
@@ -133,9 +138,15 @@ const AuthProvider = ({ children }) => {
 
 	const loadSavedSession = async () => {
 		const storagedSession = await AsyncStorage.getItem('@ClassPlanner:user');
-		const user = storagedSession ? JSON.parse(storagedSession) : null
+		const storagedStudent = await AsyncStorage.getItem('@ClassPlanner:user');
 
-		if (user) setUser(user)
+		const user = storagedSession ? JSON.parse(storagedSession) : null
+		const student = storagedStudent ? JSON.parse(storagedStudent) : null
+
+		if (user && student) {
+			setUser(user);
+			setStudent(student)
+		}
 	}
 
 	useEffect(() => {

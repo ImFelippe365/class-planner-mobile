@@ -9,21 +9,18 @@ import DayCard from "../../components/DayCard";
 import ClassCard from "../../components/ClassCard";
 import { useAuth } from "../../hooks/AuthContext";
 import { useEffect } from "react";
+import { useStudent } from "../../hooks/StudentContext";
 
 const Home = () => {
-	const { getReferencePeriods, getVirtuaClassDetails, getVirtuaClasses } =
-		useAuth();
+	const { disciplines, weekSchedules, monthSchedules } = useStudent();
 
 	const todayDate = formatDate(new Date(), {
 		month: "long",
 		day: "numeric",
 	});
 
-	const teste = async () => {
-	};
-
 	useEffect(() => {
-		teste();
+		console.log(disciplines, weekSchedules, monthSchedules)
 	}, []);
 
 	return (
