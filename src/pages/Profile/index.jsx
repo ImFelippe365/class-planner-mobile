@@ -6,7 +6,7 @@ import styles from "./styles";
 
 const Profile = () => {
 	const { user, logout } = useAuth();
-	console.log(user.url_foto_150x200)
+	
 	return (
 		<View style={styles.container}>
 			<View style={styles.userImageContainer}>

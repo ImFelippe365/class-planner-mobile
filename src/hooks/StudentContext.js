@@ -9,6 +9,8 @@ const StudentProvider = ({ children }) => {
 	const [disciplines, setDisciplines] = useState([]);
 	const [weekSchedules, setWeekSchedules] = useState([]);
 	const [monthSchedules, setMonthSchedules] = useState([]);
+	
+	const [selectedWeekday, setSelectedWeekday] = useState(new Date().getDay());
 
 	const getMonthSchedules = useCallback(async () => {
 		try {
@@ -23,7 +25,7 @@ const StudentProvider = ({ children }) => {
 	const getWeekSchedules = useCallback(async () => {
 		try {
 			const { data } = await api.get(`students/${student.id}/schedules/week/`);
-
+			
 			setWeekSchedules(data)
 		} catch (error) {
 			console.log('Erro ao tentar requisitar os horários da semana ->', error)
@@ -55,7 +57,10 @@ const StudentProvider = ({ children }) => {
 
 				getWeekSchedules,
 				getMonthSchedules,
-				getDisciplines
+				getDisciplines,
+
+				selectedWeekday,
+				setSelectedWeekday
 			}}
 		>
 			{children}

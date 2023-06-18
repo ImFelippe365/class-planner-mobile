@@ -18,6 +18,21 @@ const styles = StyleSheet.create({
 		fontFamily: theme.fonts.regular,
 		color: theme.colors.gray,
 		fontSize: 12
+	},
+
+	description: {
+		fontFamily: theme.fonts.regular,
+		color: theme.colors.gray,
+		fontSize: 12,
+		marginBottom: 8
+	},
+
+	emptyListText: {
+		fontFamily: theme.fonts.regular,
+		color: theme.colors.gray,
+		fontSize: theme.sizes.md,
+		textAlign: 'center',
+		marginTop: 4,
 	}
 });
 

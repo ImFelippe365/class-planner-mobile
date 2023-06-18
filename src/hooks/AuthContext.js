@@ -50,28 +50,22 @@ const AuthProvider = ({ children }) => {
 
 				const virtualClasses = await getVirtualClasses(ano_letivo, periodo_letivo);
 				const disciplines = virtualClasses.map(({ sigla }) => sigla);
-				const student_course = data.vinculo.curso;
 
 				student = await registerStudent({
 					"registration": data.vinculo.matricula,
 					"name": data.nome_usual,
-					"course": student_course,
+					"course": data.vinculo.curso,
 					"shift": "Tarde",
 					"email": data.email,
 					"disciplines": disciplines
 				})
 			}
+			
 			setUser(data);
 			setStudent(student);
 
 			await AsyncStorage.setItem('@ClassPlanner:user', JSON.stringify(data));
 			await AsyncStorage.setItem('@ClassPlanner:student', JSON.stringify(student));
-
-
-			getDisciplines();
-			getWeekSchedules();
-			getMonthSchedules();
-
 		} catch (error) {
 			console.log('Erro ao tentar pegar o perfil do usuário ->', error)
 		}
@@ -138,7 +132,7 @@ const AuthProvider = ({ children }) => {
 
 	const loadSavedSession = async () => {
 		const storagedSession = await AsyncStorage.getItem('@ClassPlanner:user');
-		const storagedStudent = await AsyncStorage.getItem('@ClassPlanner:user');
+		const storagedStudent = await AsyncStorage.getItem('@ClassPlanner:student');
 
 		const user = storagedSession ? JSON.parse(storagedSession) : null
 		const student = storagedStudent ? JSON.parse(storagedStudent) : null

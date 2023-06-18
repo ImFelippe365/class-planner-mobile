@@ -2,13 +2,14 @@ import { NavigationContainer } from "@react-navigation/native";
 import { useAuth } from "../hooks/AuthContext";
 import AppRoutes from "./app.routes"
 import AuthRoutes from "./auth.routes"
+import { useStudent } from "../hooks/StudentContext";
 
 const Routes = () => {
-  const { user } = useAuth();
+  const { student } = useStudent();
 
   return (
     <NavigationContainer>
-      {user ? <AppRoutes /> : <AuthRoutes />}
+      {student?.id ? <AppRoutes /> : <AuthRoutes />}
     </NavigationContainer>
   );
 };
