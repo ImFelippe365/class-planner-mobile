@@ -8,23 +8,35 @@ import styles from "./styles";
 import DayCard from "../../components/DayCard";
 import ClassCard from "../../components/ClassCard";
 import { useAuth } from "../../hooks/AuthContext";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { useStudent } from "../../hooks/StudentContext";
 
 const Home = () => {
-	const { getReferencePeriods, getVirtuaClassDetails, getVirtuaClasses } =
-		useAuth();
+	const {
+		weekSchedules,
+		monthSchedules,
+		getDisciplines,
+		getMonthSchedules,
+		getWeekSchedules,
+
+		selectedWeekday,
+		setSelectedWeekday,
+	} = useStudent();
 
 	const todayDate = formatDate(new Date(), {
 		month: "long",
 		day: "numeric",
 	});
 
-	const teste = async () => {
-	};
-
 	useEffect(() => {
-		teste();
+		getDisciplines();
+		getWeekSchedules();
+		getMonthSchedules();
 	}, []);
+
+	const currentDaySchedules = weekSchedules.filter(
+		({ weekday }) => weekday === selectedWeekday
+	);
 
 	return (
 		<View style={globalStyles.container}>
@@ -40,19 +52,26 @@ const Home = () => {
 				</TouchableOpacity>
 			</View>
 			<View style={styles.scheduleListHeader}>
-				{[0, 1, 2, 3, 4].map((item) => (
+				{[0, 1, 2, 3, 4, 5, 6].map((item) => (
 					<DayCard
 						key={item.toString()}
 						day={`${item + 5}`}
 						weekday={item}
-						onSelectWeekday={() => {}}
+						selectedWeekday={selectedWeekday}
+						onSelectWeekday={(weekday) => setSelectedWeekday(weekday)}
 					/>
 				))}
 			</View>
+			
 			<ScrollView showsVerticalScrollIndicator={false}>
 				<View style={styles.scheduleListContent}>
-					{[0, 1, 2, 3, 4, 5, 6, 7, 8].map((item) => (
-						<ClassCard key={item.toString()} />
+					{currentDaySchedules.length === 0 ? (
+						<Text style={globalStyles.emptyListText}>Sem aulas neste dia</Text>
+					) : (
+						<Text style={globalStyles.description}>Horários das aulas</Text>
+					)}
+					{currentDaySchedules.map((item) => (
+						<ClassCard key={item.id.toString()} item={item} />
 					))}
 				</View>
 			</ScrollView>

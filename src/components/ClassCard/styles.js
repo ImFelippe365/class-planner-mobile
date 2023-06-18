@@ -32,6 +32,14 @@ const styles = StyleSheet.create({
 		color: theme.colors.primary,
 		fontFamily: theme.fonts.regular,
 		fontSize: theme.sizes.md
+	},
+
+	cardSubstituteClass: {
+		backgroundColor: theme.colors.warning + '20'
+	},
+
+	cardCanceledClass: {
+		backgroundColor: theme.colors.danger + '20'
 	}
 
 });

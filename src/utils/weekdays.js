@@ -4,6 +4,8 @@ export const shortWeekdays = [
 	'QUA',
 	'QUI',
 	'SEX',
+	'SÁB',
+	'DOM'
 ]
 
 export const longWeekdays = [
@@ -12,4 +14,6 @@ export const longWeekdays = [
 	'Quarta-feira',
 	'Quinta-feira',
 	'Sexta-feira',
+	'Sábado',
+	'Domingo'
 ]

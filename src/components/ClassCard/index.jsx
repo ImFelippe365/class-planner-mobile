@@ -1,22 +1,31 @@
 import { View, Text } from "react-native";
-
 import styles from "./styles";
 import { User } from "react-native-feather";
 import theme from "../../styles/theme";
+import { formatDisciplineName } from "./../../utils/formatDisciplineName";
 
-const ClassCard = () => {
+const ClassCard = ({ item }) => {
+	const currentTime = new Date().getTime();
 
-	const currentTime = new Date();
+	const discipline = item.canceled_class
+		? ""
+		: formatDisciplineName(item.discipline.name);
+	
+	const teachers = item.canceled_class
+		? []
+		: item.discipline.taught_by.map(({ teacher }) => teacher.name);
 
 	return (
 		<View style={styles.cardContainer}>
-			<Text style={styles.classTime}>13:00 até 14:30</Text>
-			<Text style={styles.classDiscipline}>Arquitetura de Software</Text>
+			<Text style={styles.classTime}>
+				{item.start_time} até {item.end_time}
+			</Text>
+			<Text style={styles.classDiscipline}>{discipline}</Text>
 
 			<View style={styles.classTeacherContainer}>
 				<User color={theme.colors.primary} width={16} />
-				<Text numberOfLines={1} style={styles.classTeacher}>
-					Raphael de Carvalho
+				<Text numberOfLines={2} style={styles.classTeacher}>
+					{teachers.join(" / ")}
 				</Text>
 			</View>
 		</View>
