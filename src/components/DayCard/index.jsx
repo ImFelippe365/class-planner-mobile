@@ -5,7 +5,7 @@ import styles from "./styles";
 
 const DayCard = ({ weekday, day, selectedWeekday, onSelectWeekday }) => {
 	const currentDayName = shortWeekdays[weekday];
-
+	
 	return (
 		<TouchableOpacity
 			onPress={() => onSelectWeekday(weekday)}
