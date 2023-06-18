@@ -2,14 +2,16 @@ import { View, Text, TouchableOpacity, ScrollView } from "react-native";
 import Header from "../../components/Header";
 import globalStyles from "../../styles/globalStyles";
 import { formatDate } from "../../utils/formatDate";
-import { Plus } from "react-native-feather";
+import { Send, Calendar } from "react-native-feather";
 import theme from "../../styles/theme";
 import styles from "./styles";
 import DayCard from "../../components/DayCard";
 import ClassCard from "../../components/ClassCard";
 import { useAuth } from "../../hooks/AuthContext";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useStudent } from "../../hooks/StudentContext";
+import { useNavigation } from "@react-navigation/core";
+import DateTimePicker from "@react-native-community/datetimepicker";
 
 const Home = () => {
 	const {
@@ -21,7 +23,15 @@ const Home = () => {
 
 		selectedWeekday,
 		setSelectedWeekday,
+		selectedDate,
+		setSelectedDate,
 	} = useStudent();
+
+	const { navigate } = useNavigation();
+
+	const [showDatePicker, setShowDatePicker] = useState(false);
+
+	const toggleDatePicker = () => setShowDatePicker((visible) => !visible);
 
 	const todayDate = formatDate(new Date(), {
 		month: "long",
@@ -34,35 +44,77 @@ const Home = () => {
 		getMonthSchedules();
 	}, []);
 
-	const currentDaySchedules = weekSchedules.filter(
-		({ weekday }) => weekday === selectedWeekday
-	);
+	const currentDaySchedules = weekSchedules.filter(({ weekday }) => {
+		const currentWeekday = weekday + 1 === 7 ? 0 : weekday + 1;
+
+		return currentWeekday === selectedWeekday;
+	});
+
+	const getWeekDates = useCallback(() => {
+		return [0, 1, 2, 3, 4, 5, 6].map((day) => {
+			let today = selectedDate ? new Date(selectedDate) : new Date();
+
+			while (today.getDay() !== day) {
+				if (today.getDay() > day) {
+					today.setDate(today.getDate() - 1);
+				} else if (today.getDay() < day) {
+					today.setDate(today.getDate() + 1);
+				}
+			}
+
+			return today;
+		});
+	}, [selectedDate]);
 
 	return (
 		<View style={globalStyles.container}>
+			{showDatePicker && (
+				<DateTimePicker
+					locale="pt-br"
+					value={selectedDate ? selectedDate : new Date()}
+					accentColor={theme.colors.primary}
+					themeVariant="dark"
+					onChange={({ type }, date) => {
+						toggleDatePicker();
+						if (type !== "dismissed") {
+							setSelectedDate(date);
+							setSelectedWeekday(date.getDay());
+						}
+					}}
+				/>
+			)}
+
 			<Header />
 			<View style={styles.header}>
 				<View>
 					<Text style={globalStyles.subtitle}>{todayDate}</Text>
 					<Text style={globalStyles.title}>Hoje</Text>
 				</View>
-				<TouchableOpacity style={styles.actionAlertButton}>
-					<Plus color={theme.colors.white} width={18} />
-					<Text style={styles.actionAlertButtonText}>Emitir alerta</Text>
-				</TouchableOpacity>
+				<View style={styles.buttonsContainer}>
+					<TouchableOpacity
+						onPress={() => toggleDatePicker()}
+						style={styles.iconButtonContainer}
+					>
+						<Calendar color={theme.colors.primary} width={20} />
+					</TouchableOpacity>
+
+					<TouchableOpacity style={styles.iconButtonContainer}>
+						<Send color={theme.colors.primary} width={20} />
+					</TouchableOpacity>
+				</View>
 			</View>
 			<View style={styles.scheduleListHeader}>
-				{[0, 1, 2, 3, 4, 5, 6].map((item) => (
+				{getWeekDates().map((date) => (
 					<DayCard
-						key={item.toString()}
-						day={`${item + 5}`}
-						weekday={item}
+						key={date.getDay().toString()}
+						day={date.getDate()}
+						weekday={date.getDay()}
 						selectedWeekday={selectedWeekday}
 						onSelectWeekday={(weekday) => setSelectedWeekday(weekday)}
 					/>
 				))}
 			</View>
-			
+
 			<ScrollView showsVerticalScrollIndicator={false}>
 				<View style={styles.scheduleListContent}>
 					{currentDaySchedules.length === 0 ? (

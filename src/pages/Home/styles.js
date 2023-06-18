@@ -17,21 +17,11 @@ const styles = StyleSheet.create({
 		justifyContent: 'space-between'
 	},
 
-	actionAlertButton: {
-		backgroundColor: theme.colors.primary,
+	iconButtonContainer: {
 		borderRadius: 16,
 		flexDirection: 'row',
-		height: 40,
 		justifyContent: "center",
 		alignItems: 'center',
-		gap: 4,
-		width: 120
-	},
-
-	actionAlertButtonText: {
-		color: theme.colors.white,
-		fontSize: theme.sizes.md,
-		fontFamily: theme.fonts.regular
 	},
 
 	scheduleListHeader: {
@@ -43,6 +33,13 @@ const styles = StyleSheet.create({
 
 	scheduleListContent: {
 		gap: 8
+	},
+
+	buttonsContainer: {
+		flexDirection: 'row',
+		alignItems: 'center',
+		gap: 24
+
 	}
 });
 
