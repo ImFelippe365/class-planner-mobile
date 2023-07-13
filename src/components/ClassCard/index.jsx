@@ -10,15 +10,15 @@ const ClassCard = ({ item }) => {
 	const discipline = item.canceled_class
 		? ""
 		: formatDisciplineName(item.discipline.name);
-	
+
 	const teachers = item.canceled_class
 		? []
-		: item.discipline.taught_by.map(({ teacher }) => teacher.name);
+		: item.discipline.taught_by.map(({ name }) => name);
 
 	return (
 		<View style={styles.cardContainer}>
 			<Text style={styles.classTime}>
-				{item.start_time} até {item.end_time}
+				{item.start_time.slice(0,5)} até {item.end_time.slice(0,5)}
 			</Text>
 			<Text style={styles.classDiscipline}>{discipline}</Text>
 

@@ -32,7 +32,7 @@ const StudentProvider = ({ children }) => {
 			const formattedDate = date ? `${currentDate?.getDate()}/${currentDate?.getMonth(0)}/${currentDate?.getFullYear()}` : ''
 
 			const { data } = await api.get(formattedDate ? `students/${student.id}/schedules/week?date=${formattedDate}` : `students/${student.id}/schedules/week/`);
-
+			
 			setWeekSchedules(data)
 		} catch (error) {
 			console.log('Erro ao tentar requisitar os horários da semana ->', error)
