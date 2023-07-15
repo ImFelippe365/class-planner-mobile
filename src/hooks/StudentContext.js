@@ -29,8 +29,8 @@ const StudentProvider = ({ children }) => {
 	const getWeekSchedules = useCallback(async (date) => {
 		try {
 			const currentDate = new Date(date);
-			const formattedDate = date ? `${currentDate?.getDate()}/${currentDate?.getMonth(0)}/${currentDate?.getFullYear()}` : ''
-
+			const formattedDate = date ? `${currentDate?.toLocaleDateString('pt-BR')}` : ''
+			
 			const { data } = await api.get(formattedDate ? `students/${student.id}/schedules/week?date=${formattedDate}` : `students/${student.id}/schedules/week/`);
 			
 			setWeekSchedules(data)
