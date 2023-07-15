@@ -9,6 +9,12 @@ const styles = StyleSheet.create({
 		paddingHorizontal: 20
 	},
 
+	cardHeader: {
+		flexDirection: 'row',
+		alignItems: 'center',
+		gap: 6
+	},
+
 	classTime: {
 		color: theme.colors.gray,
 		fontFamily: theme.fonts.regular,
@@ -40,6 +46,33 @@ const styles = StyleSheet.create({
 
 	cardCanceledClass: {
 		backgroundColor: theme.colors.danger + '20'
+	},
+
+	substituteDiscipline: {
+		color: theme.colors.gray,
+		fontSize: 13,
+	},
+
+	textHighlight: {
+		fontWeight: 'bold'
+	},
+
+	replacedClassTag: {
+		backgroundColor: theme.colors.warning,
+		borderRadius: 8,
+		color: theme.colors.white,
+		paddingVertical: 2,
+		paddingHorizontal: 8,
+		fontSize: 10
+	},
+
+	canceledClassTag: {
+		backgroundColor: theme.colors.danger,
+		borderRadius: 8,
+		color: theme.colors.white,
+		paddingVertical: 2,
+		paddingHorizontal: 8,
+		fontSize: 10
 	}
 
 });
