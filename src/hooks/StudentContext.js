@@ -10,10 +10,28 @@ const StudentProvider = ({ children }) => {
 	const [disciplines, setDisciplines] = useState([]);
 	const [weekSchedules, setWeekSchedules] = useState([]);
 	const [monthSchedules, setMonthSchedules] = useState([]);
+	const [currentSchedule, setCurrentSchedule] = useState([]);
 
 	const [selectedWeekday, setSelectedWeekday] = useState(new Date().getDay());
 	const [selectedDate, setSelectedDate] = useState();
 	const [calendarSchedulesStatus, setCalendarSchedulesStatus] = useState([]);
+
+	const getNowSchedule = useCallback((schedules) => {
+		try {
+			const currentDate = new Date('2023-07-19 13:21');
+
+			const currentSchedule = schedules.find(({ class_date, start_time, end_time }) => {
+				const startClassDate = (new Date(`${class_date} ${start_time}`))
+				const endClassDate = (new Date(`${class_date} ${end_time}`))
+
+				return startClassDate <= currentDate && endClassDate >= currentDate
+			})
+			
+			setCurrentSchedule( currentSchedule)
+		} catch (error) {
+			console.log('Erro ao tentar requisitar os horários da semana ->', error)
+		}
+	}, [weekSchedules]);
 
 	const getMonthSchedules = useCallback(async () => {
 		try {
@@ -30,14 +48,17 @@ const StudentProvider = ({ children }) => {
 		try {
 			const currentDate = new Date(date);
 			const formattedDate = date ? `${currentDate?.toLocaleDateString('pt-BR')}` : ''
-			
+
 			const { data } = await api.get(formattedDate ? `students/${student.id}/schedules/week?date=${formattedDate}` : `students/${student.id}/schedules/week/`);
-			
+
 			setWeekSchedules(data)
+			getNowSchedule(data)
 		} catch (error) {
 			console.log('Erro ao tentar requisitar os horários da semana ->', error)
 		}
 	}, [student]);
+
+	
 
 	const getDisciplines = useCallback(async () => {
 		try {
@@ -59,7 +80,7 @@ const StudentProvider = ({ children }) => {
 	const getCalendarScheduleStatus = useCallback(() => {
 		const newStatus = monthSchedules.reduce((accumulator, currentValue) => {
 			const lastIndex = accumulator.length === 0 ? currentValue : accumulator.reverse()[0]
-			
+
 
 			const currentClassStatus = {
 				selected: false,
@@ -101,7 +122,10 @@ const StudentProvider = ({ children }) => {
 				setSelectedDate,
 
 				calendarSchedulesStatus,
-				getCalendarScheduleStatus
+				getCalendarScheduleStatus,
+				getNowSchedule,
+				currentSchedule,
+				setCurrentSchedule
 			}}
 		>
 			{children}
