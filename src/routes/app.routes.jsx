@@ -3,8 +3,9 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 
 import Home from "./../pages/Home/index";
 import Profile from "./../pages/Profile/index";
+import Disciplines from "./../pages/Disciplines/index";
 import theme from "./../styles/theme";
-import { Clock, User } from "react-native-feather";
+import { Book, Clock, User } from "react-native-feather";
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -30,6 +31,13 @@ const TabNavigation = () => (
 			component={Home}
 			options={{
 				tabBarIcon: ({ color }) => <Clock color={color} fill={color + "20"} />,
+			}}
+		/>
+		<Tab.Screen
+			name="Disciplines"
+			component={Disciplines}
+			options={{
+				tabBarIcon: ({ color }) => <Book color={color} fill={color + "20"} />,
 			}}
 		/>
 		<Tab.Screen
