@@ -16,10 +16,18 @@ const styles = StyleSheet.create({
   },
 
   buttonText: {
-    fontFamily: theme.fonts.bold,
+    fontFamily: theme.fonts.semiBold,
     color: theme.colors.white,
     fontSize: theme.sizes.base,
   },
+
+	secondaryButton: {
+		backgroundColor: theme.colors.white
+	},
+
+	secondaryButtonText: {
+		color: theme.colors.primary
+	}
 });
 
 export default styles;

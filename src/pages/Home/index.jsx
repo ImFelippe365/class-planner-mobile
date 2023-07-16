@@ -12,6 +12,8 @@ import { useCallback, useEffect, useState } from "react";
 import { useStudent } from "../../hooks/StudentContext";
 import { useNavigation } from "@react-navigation/core";
 import DateTimePicker from "@react-native-community/datetimepicker";
+import Modal from "../../components/Modal";
+import AlertEmissionModal from "../Shared/AlertEmissionModal";
 
 const Home = () => {
 	const {
@@ -30,6 +32,7 @@ const Home = () => {
 	const { navigate } = useNavigation();
 
 	const [showDatePicker, setShowDatePicker] = useState(false);
+	const [showAlertModal, setShowAlertModal] = useState(false);
 
 	const toggleDatePicker = () => setShowDatePicker((visible) => !visible);
 
@@ -84,6 +87,13 @@ const Home = () => {
 				/>
 			)}
 
+			{showAlertModal && (
+				<AlertEmissionModal
+					isVisible={showAlertModal}
+					setIsVisible={setShowAlertModal}
+				/>
+			)}
+
 			<Header />
 			<View style={styles.header}>
 				<View>
@@ -98,7 +108,10 @@ const Home = () => {
 						<Calendar color={theme.colors.primary} width={20} />
 					</TouchableOpacity>
 
-					<TouchableOpacity style={styles.iconButtonContainer}>
+					<TouchableOpacity
+						onPress={() => setShowAlertModal(true)}
+						style={styles.iconButtonContainer}
+					>
 						<Send color={theme.colors.primary} width={20} />
 					</TouchableOpacity>
 				</View>

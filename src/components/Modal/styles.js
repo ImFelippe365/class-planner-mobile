@@ -36,8 +36,16 @@ const styles = StyleSheet.create({
 	description: {
 		fontFamily: theme.fonts.regular,
 		fontSize: 14,
+		marginTop: 8,
+		marginBottom: 24,
 		color: theme.colors.gray
 	},
+
+	childrenContainer: {
+		marginBottom: 24,
+		gap: 6,
+		marginTop: 12
+	}
 	
 });
 

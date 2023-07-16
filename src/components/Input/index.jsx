@@ -4,13 +4,13 @@ import { Camera, Eye, EyeOff, Search } from "react-native-feather";
 import theme from "../../styles/theme";
 import styles from "./styles";
 
-export const Input = ({ label, style, error, ...props }) => {
+export const Input = ({ label, style, contentStyle, error, ...props }) => {
   return (
     <View style={[styles.container, style]}>
       {label && (
         <Text style={[styles.label, error && styles.errorMode]}>{label}</Text>
       )}
-      <TextInput style={[styles.input, error && styles.errorMode]} {...props} />
+      <TextInput style={[styles.input, contentStyle && contentStyle, error && styles.errorMode]} {...props} />
       {error && <Text style={styles.errorText}>{error}</Text>}
     </View>
   );
