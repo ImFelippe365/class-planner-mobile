@@ -1,4 +1,6 @@
-export const formatDisciplineName = (discipline) =>
-	discipline.split("-")[1]
+export const formatDisciplineName = (discipline) => {
+	if (!discipline) return '';
+	return discipline.split("-")[1]
 		.split("(")[0]
 		.trim();
+}

@@ -10,7 +10,7 @@ const StudentProvider = ({ children }) => {
 	const [disciplines, setDisciplines] = useState([]);
 	const [weekSchedules, setWeekSchedules] = useState([]);
 	const [monthSchedules, setMonthSchedules] = useState([]);
-	const [currentSchedule, setCurrentSchedule] = useState([]);
+	const [currentSchedule, setCurrentSchedule] = useState();
 
 	const [selectedWeekday, setSelectedWeekday] = useState(new Date().getDay());
 	const [selectedDate, setSelectedDate] = useState();
@@ -18,7 +18,7 @@ const StudentProvider = ({ children }) => {
 
 	const getNowSchedule = useCallback((schedules) => {
 		try {
-			const currentDate = new Date('2023-07-19 13:21');
+			const currentDate = new Date();
 
 			const currentSchedule = schedules.find(({ class_date, start_time, end_time }) => {
 				const startClassDate = (new Date(`${class_date} ${start_time}`))
@@ -26,8 +26,10 @@ const StudentProvider = ({ children }) => {
 
 				return startClassDate <= currentDate && endClassDate >= currentDate
 			})
-			
-			setCurrentSchedule( currentSchedule)
+
+			if (!currentSchedule) return;
+
+			setCurrentSchedule(currentSchedule)
 		} catch (error) {
 			console.log('Erro ao tentar requisitar os horários da semana ->', error)
 		}
@@ -58,7 +60,7 @@ const StudentProvider = ({ children }) => {
 		}
 	}, [student]);
 
-	
+
 
 	const getDisciplines = useCallback(async () => {
 		try {
@@ -91,7 +93,7 @@ const StudentProvider = ({ children }) => {
 
 			return newAccumulator
 		}, {})
-		console.log(newStatus)
+		
 		setCalendarSchedulesStatus(newStatus)
 	}, [monthSchedules]);
 

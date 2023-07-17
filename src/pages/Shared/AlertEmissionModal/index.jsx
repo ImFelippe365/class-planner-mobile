@@ -7,7 +7,6 @@ import { Input } from "../../../components/Input";
 import { formatDisciplineName } from "./../../../utils/formatDisciplineName";
 
 import styles from "./styles";
-// import { Container } from './styles';
 
 import { useStudent } from "../../../hooks/StudentContext";
 import api from "../../../services/api";
@@ -15,26 +14,38 @@ import api from "../../../services/api";
 const AlertEmissionModal = ({ isVisible, setIsVisible }) => {
 	const { student, currentSchedule } = useStudent();
 
-	const discipline = {
-		label: formatDisciplineName(currentSchedule?.discipline?.name),
-		value: currentSchedule?.discipline?.id,
-	};
+	const discipline = currentSchedule
+		? {
+				label: currentSchedule?.class_to_replace
+					? formatDisciplineName(
+							currentSchedule?.class_to_replace?.discipline?.name
+					  )
+					: formatDisciplineName(currentSchedule?.discipline?.name),
+				value: currentSchedule?.class_to_replace
+					? currentSchedule?.class_to_replace?.discipline?.id
+					: currentSchedule?.discipline?.id,
+		  }
+		: {};
 
-	const teachers = currentSchedule?.discipline?.taught_by?.map(
-		({ id, name }) => {
-			return {
-				label: name,
-				value: id,
-			};
-		}
-	);
+	const teachers = currentSchedule
+		? currentSchedule?.discipline?.taught_by?.map(({ id, name }) => {
+				return {
+					label: name,
+					value: id,
+				};
+		  })
+		: [];
 
 	const [currentStep, setCurrentStep] = useState(0);
 	const [formData, setFormData] = useState({
 		student_id: student.id,
-		discipline_id: discipline.value,
-		teacher_id: teachers[0].value,
-		class_id: currentSchedule.class_id,
+		discipline_id: currentSchedule?.class_to_replace
+			? currentSchedule?.class_to_replace?.discipline?.id
+			: discipline?.value,
+		teacher_id: currentSchedule?.class_to_replace
+			? currentSchedule?.teach_by[0].value
+			: teachers[0]?.value,
+		class_id: currentSchedule?.class_id,
 		reason: "",
 	});
 
@@ -136,11 +147,13 @@ const AlertEmissionModal = ({ isVisible, setIsVisible }) => {
 	return (
 		<Modal
 			title={"Emitir alerta para COADES"}
-			description={steps[currentStep].description}
+			description={
+				!currentSchedule ? steps[2].description : steps[currentStep].description
+			}
 			isVisible={isVisible}
 			setIsVisible={setIsVisible}
 		>
-			{steps[currentStep].children}
+			{!currentSchedule ? steps[2].children : steps[currentStep].children}
 		</Modal>
 	);
 };
