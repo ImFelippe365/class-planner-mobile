@@ -3,10 +3,10 @@ import theme from "../../styles/theme";
 
 const styles = StyleSheet.create({
 	cardContainer: {
-		backgroundColor: theme.colors.shadowPrimary,
+		backgroundColor: theme.colors.white,
 		borderRadius: 16,
 		paddingVertical: 18,
-		paddingHorizontal: 20
+		paddingHorizontal: 20,
 	},
 
 	cardHeader: {
@@ -48,6 +48,10 @@ const styles = StyleSheet.create({
 		backgroundColor: theme.colors.danger + '20'
 	},
 
+	cardNowClass: {
+		backgroundColor: theme.colors.primary + '20'
+	},
+
 	substituteDiscipline: {
 		color: theme.colors.gray,
 		fontSize: 13,
@@ -57,6 +61,15 @@ const styles = StyleSheet.create({
 		fontWeight: 'bold'
 	},
 
+	nowClassTag: {
+		backgroundColor: theme.colors.primary,
+		borderRadius: 8,
+		color: theme.colors.white,
+		paddingVertical: 2,
+		paddingHorizontal: 8,
+		fontSize: 10
+	},
+	
 	replacedClassTag: {
 		backgroundColor: theme.colors.warning,
 		borderRadius: 8,
