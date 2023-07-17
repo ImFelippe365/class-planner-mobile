@@ -4,14 +4,28 @@ import { useAuth } from "../../hooks/AuthContext";
 import theme from "../../styles/theme";
 import styles from "./styles";
 import { useStudent } from "../../hooks/StudentContext";
+import globalStyles from "./../../styles/globalStyles";
+import Header from "../../components/Header";
 
 const Profile = () => {
 	const { user, logout } = useAuth();
-	const { monthSchedules } = useStudent();
+	const { student } = useStudent();
 
 	return (
 		<View style={styles.container}>
-			<View style={styles.userImageContainer}>
+			<Header />
+			<View style={styles.header}>
+				<View>
+					<Text style={globalStyles.subtitle}>Olá, {student.name}</Text>
+					<Text style={globalStyles.title}>Seu perfil</Text>
+				</View>
+				<TouchableOpacity onPress={() => logout()} style={styles.logoutButton}>
+					<LogOut color={theme.colors.danger} width={20} height={20} />
+					<Text style={styles.logoutButtonText}>Sair</Text>
+				</TouchableOpacity>
+			</View>
+
+			<View style={styles.profileHeader}>
 				<View style={{ position: "relative" }}>
 					{user.url_foto_150x200 ? (
 						<Image
@@ -26,29 +40,21 @@ const Profile = () => {
 						</View>
 					)}
 				</View>
+				<View style={styles.student}>
+					<Text style={styles.studentRegistration}>{student.registration}</Text>
+					<Text style={styles.userName}>{student.name}</Text>
+					<Text style={styles.studentReferencePeriod}>
+						{student.student_class.course.byname} -{" "}
+						{student.student_class.reference_period}°{" "}
+						{student.student_class.course.degree === "Ensino superior"
+							? "período"
+							: "ano"}
+					</Text>
+				</View>
 			</View>
-			<Text style={styles.userName}>{user.nome_usual}</Text>
-			<Text style={styles.userEstablishment}>{user.matricula}</Text>
 
 			<View style={styles.userConfig}>
-				{/* <TouchableOpacity style={styles.configOption}>
-					<Edit color={theme.colors.black} width={24} height={24} />
-					<Text style={styles.configLabel}>Editar perfil</Text>
-				</TouchableOpacity>
-				<TouchableOpacity style={styles.configOption}>
-					<Shield color={theme.colors.black} width={24} height={24} />
-					<Text style={styles.configLabel}>Política de privacidade</Text>
-				</TouchableOpacity>
-				<TouchableOpacity style={styles.configOption}>
-					<FileText color={theme.colors.black} width={24} height={24} />
-					<Text style={styles.configLabel}>Termos e condições</Text>
-				</TouchableOpacity> */}
-				<TouchableOpacity onPress={() => logout()} style={styles.configOption}>
-					<LogOut color={theme.colors.danger} width={24} height={24} />
-					<Text style={[styles.configLabel, { color: theme.colors.danger }]}>
-						Sair
-					</Text>
-				</TouchableOpacity>
+				
 			</View>
 		</View>
 	);

@@ -1,5 +1,5 @@
 import React from "react";
-import { Text, View } from "react-native";
+import { Alert, Text, View } from "react-native";
 import Button from "../../components/Button";
 import { Input, PasswordInput } from "../../components/Input";
 
@@ -9,14 +9,14 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { Controller, useForm } from "react-hook-form";
 import { useAuth } from "../../hooks/AuthContext";
 
-import { REGISTRATION, PASSWORD } from "@env"
-
 export const SignIn = () => {
-
-	const { setUser, login } = useAuth();
+	const { login } = useAuth();
 
 	const signInSchema = yup.object().shape({
-		registration: yup.string().email("Email inválido").required("Campo obrigatório"),
+		registration: yup
+			.number()
+			.typeError("Campo aceita apenas caracteres númericos")
+			.required("Campo obrigatório"),
 		password: yup.string().required("Campo obrigatório"),
 	});
 
@@ -25,17 +25,33 @@ export const SignIn = () => {
 		handleSubmit,
 		formState: { errors, isSubmitting },
 	} = useForm({
-		// resolver: yupResolver(signInSchema),
+		resolver: yupResolver(signInSchema),
 	});
 
-	const onSubmitLogin = async () => {
-		login(REGISTRATION, PASSWORD)
+	const onSubmitLogin = async (data) => {
+		try {
+			const status = await login(data.registration, data.password);
+
+			if (status === "error") {
+				Alert.alert(
+					"Erro ao se autenticar",
+					"Matrícula ou senha incorreta(s), verifique ambos e tente novamente."
+				);
+			}
+		} catch (err) {
+			Alert.alert(
+				"Erro ao se autenticar",
+				"Matrícula ou senha incorreta(s), verifique ambos e tente novamente."
+			);
+		}
 	};
 
 	return (
 		<View style={styles.container}>
 			<Text style={styles.title}>Entrar</Text>
-			<Text style={styles.subtitle}>Use suas credenciais do SUAP para se autenticar</Text>
+			<Text style={styles.subtitle}>
+				Use suas credenciais do SUAP para se autenticar
+			</Text>
 
 			<Controller
 				control={control}
@@ -48,6 +64,7 @@ export const SignIn = () => {
 						style={styles.registrationField}
 						error={errors?.registration?.message}
 						placeholder="Sua matrícula"
+						keyboardType={"numeric"}
 					/>
 				)}
 				name="registration"
