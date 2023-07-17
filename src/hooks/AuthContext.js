@@ -116,8 +116,11 @@ const AuthProvider = ({ children }) => {
 			])
 
 			getStudentProfile();
+
+			return 'success'
 		} catch (error) {
 			console.log('Erro ao tentar fazer login ->', JSON.stringify(error))
+			return 'error'
 		}
 	}, []);
 
