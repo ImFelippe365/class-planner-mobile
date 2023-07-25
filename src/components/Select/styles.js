@@ -41,6 +41,7 @@ const styles = StyleSheet.create({
 	},
 
 	selectedOptionText: {
+		width: '90%',
 		verticalAlign: 'middle',
 		fontFamily: theme.fonts.regular,
 		color: theme.colors.gray,
@@ -89,7 +90,7 @@ const styles = StyleSheet.create({
 	optionButtonText: {
 		color: theme.colors.gray,
 		fontFamily: theme.fonts.regular
-		
+
 	}
 });
 
