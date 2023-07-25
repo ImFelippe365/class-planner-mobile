@@ -2,6 +2,7 @@ import { createContext, useCallback, useContext, useEffect, useState } from "rea
 import api, { suapApi } from '../services/api'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useStudent } from "./StudentContext";
+import { Alert } from "react-native";
 
 const AuthContext = createContext({});
 
@@ -14,10 +15,11 @@ const AuthProvider = ({ children }) => {
 	const registerStudent = useCallback(async (new_student) => {
 		try {
 			const { data } = await api.post('students/', new_student);
-
-			return data[0];
+			console.log('register', data)
+			return data;
 		} catch (error) {
-			console.warn('Erro ao tentar cadastrar estudante ->', error)
+			console.log('register', error)
+			throw new Error(error)
 		}
 	}, []);
 
@@ -25,11 +27,12 @@ const AuthProvider = ({ children }) => {
 		try {
 			const { data } = await api.get(`students/byregistration/${registration}/`);
 
+			console.log('isregistered', data)
 			if (data?.details == 'Não encontrado') return false
-
 			return data;
 		} catch (error) {
-			console.warn('Erro ao tentar verificar se estudante está registrado ->', JSON.stringify(error))
+			console.log('isregistered', JSON.stringify(error))
+			throw new Error(error)
 		}
 	}, []);
 
@@ -37,8 +40,9 @@ const AuthProvider = ({ children }) => {
 		try {
 			const { data } = await suapApi.get('minhas-informacoes/meus-dados/');
 
+
 			if (data.tipo_vinculo !== "Aluno") {
-				console.warn('Apenas estudantes podem se autenticar')
+				Alert.alert('Acesso restrito para estudantes', 'Este aplicativo é voltado para os alunos da instituição, apenas eles podem se autenticar.')
 				return;
 			}
 
@@ -46,28 +50,50 @@ const AuthProvider = ({ children }) => {
 
 			if (!student) {
 				const periods = await getReferencePeriods();
-				const { ano_letivo, periodo_letivo } = periods.at(-1);
+				
+				let virtualClasses = [];
 
-				const virtualClasses = await getVirtualClasses(ano_letivo, periodo_letivo);
-				const disciplines = virtualClasses.map(({ sigla }) => sigla);
+				try {
+					const { ano_letivo, periodo_letivo } = periods.at(-1);
+					virtualClasses = await getVirtualClasses(ano_letivo, periodo_letivo);
+				} catch {
+					const { ano_letivo, periodo_letivo } = periods.at(-2);
+					virtualClasses = await getVirtualClasses(ano_letivo, periodo_letivo);
+				}
 
+				const disciplines = virtualClasses?.map(({ sigla }) => sigla) || [];
+
+				const findShift = virtualClasses.at(-1).horarios_de_aula.split('').find((letter) => letter === "M" || letter === "V" || letter === "N")
+				const shifts = {
+					'M': 'Manhã',
+					'V': 'Tarde',
+					'N': 'Noite'
+				}
+				console.log({
+					"registration": data.vinculo.matricula,
+					"name": data.nome_usual,
+					"course": data.vinculo.curso,
+					"shift": shifts[findShift],
+					"email": data.email,
+					"disciplines": disciplines
+				})
 				student = await registerStudent({
 					"registration": data.vinculo.matricula,
 					"name": data.nome_usual,
 					"course": data.vinculo.curso,
-					"shift": "Tarde",
+					"shift": shifts[findShift],
 					"email": data.email,
 					"disciplines": disciplines
 				})
 			}
-			
+
 			setUser(data);
 			setStudent(student);
 
 			await AsyncStorage.setItem('@ClassPlanner:user', JSON.stringify(data));
 			await AsyncStorage.setItem('@ClassPlanner:student', JSON.stringify(student));
 		} catch (error) {
-			console.log('Erro ao tentar pegar o perfil do usuário ->', error)
+			throw new Error(error)
 		}
 	}, []);
 
@@ -77,7 +103,9 @@ const AuthProvider = ({ children }) => {
 
 			return data;
 		} catch (error) {
-			console.log('Erro ao tentar requisitar os periodos letivos do estudante ->', error)
+
+			console.log('tutz1', JSON.stringify(error))
+			throw new Error(error)
 		}
 	}, []);
 
@@ -87,7 +115,9 @@ const AuthProvider = ({ children }) => {
 
 			return data;
 		} catch (error) {
-			console.log('Erro ao tentar requisitar as turmas virtuais ->', error)
+
+			console.log('tutz2', JSON.stringify(error))
+			throw new Error(error)
 		}
 	}, []);
 
@@ -97,7 +127,7 @@ const AuthProvider = ({ children }) => {
 
 			return data;
 		} catch (error) {
-			console.log('Erro ao tentar requisitar a turma virtual ->', error)
+			throw new Error(error)
 		}
 	}, []);
 
@@ -116,11 +146,8 @@ const AuthProvider = ({ children }) => {
 			])
 
 			getStudentProfile();
-
-			return 'success'
 		} catch (error) {
-			console.log('Erro ao tentar fazer login ->', JSON.stringify(error))
-			return 'error'
+			throw new Error(error)
 		}
 	}, []);
 

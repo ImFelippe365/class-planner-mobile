@@ -17,6 +17,7 @@ import AlertEmissionModal from "../Shared/AlertEmissionModal";
 
 const Home = () => {
 	const {
+		student,
 		weekSchedules,
 		monthSchedules,
 		getDisciplines,
@@ -108,12 +109,14 @@ const Home = () => {
 						<Calendar color={theme.colors.primary} width={20} />
 					</TouchableOpacity>
 
-					<TouchableOpacity
-						onPress={() => setShowAlertModal(true)}
-						style={styles.iconButtonContainer}
-					>
-						<Send color={theme.colors.primary} width={20} />
-					</TouchableOpacity>
+					{student.student_class.class_leader_id === student.id.toString() && (
+						<TouchableOpacity
+							onPress={() => setShowAlertModal(true)}
+							style={styles.iconButtonContainer}
+						>
+							<Send color={theme.colors.primary} width={20} />
+						</TouchableOpacity>
+					)}
 				</View>
 			</View>
 			<View style={styles.scheduleListHeader}>

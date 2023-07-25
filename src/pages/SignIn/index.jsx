@@ -39,6 +39,7 @@ export const SignIn = () => {
 				);
 			}
 		} catch (err) {
+			console.log(JSON.stringify(err))
 			Alert.alert(
 				"Erro ao se autenticar",
 				"Matrícula ou senha incorreta(s), verifique ambos e tente novamente."

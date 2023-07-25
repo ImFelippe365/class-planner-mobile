@@ -135,7 +135,7 @@ const AlertEmissionModal = ({ isVisible, setIsVisible }) => {
 		},
 		{
 			description:
-				"Não há aulas no momento. Você só pode emitir um alerta dentro de um período que a aula está ocorrendo.",
+				"Não há aulas no momento. Você só pode emitir um alerta dentro de um período que a aula está ocorrendo. Outra exceção é a ausência de professores ministrando esta disciplina",
 			children: (
 				<>
 					<Button onPress={() => onFinish()} name={"Fechar"} />
