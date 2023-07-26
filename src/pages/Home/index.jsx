@@ -109,7 +109,7 @@ const Home = () => {
 						<Calendar color={theme.colors.primary} width={20} />
 					</TouchableOpacity>
 
-					{student.student_class.class_leader_id === student.id.toString() && (
+					{student?.student_class?.class_leader_id === student.id.toString() && (
 						<TouchableOpacity
 							onPress={() => setShowAlertModal(true)}
 							style={styles.iconButtonContainer}

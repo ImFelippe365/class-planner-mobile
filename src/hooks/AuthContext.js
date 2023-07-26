@@ -18,7 +18,7 @@ const AuthProvider = ({ children }) => {
 			console.log('register', data)
 			return data;
 		} catch (error) {
-			console.log('register', error)
+			console.log('register', JSON.stringify(error))
 			throw new Error(error)
 		}
 	}, []);
@@ -60,7 +60,7 @@ const AuthProvider = ({ children }) => {
 					const { ano_letivo, periodo_letivo } = periods.at(-2);
 					virtualClasses = await getVirtualClasses(ano_letivo, periodo_letivo);
 				}
-
+				
 				const disciplines = virtualClasses?.map(({ sigla }) => sigla) || [];
 
 				const findShift = virtualClasses.at(-1).horarios_de_aula.split('').find((letter) => letter === "M" || letter === "V" || letter === "N")
@@ -69,21 +69,15 @@ const AuthProvider = ({ children }) => {
 					'V': 'Tarde',
 					'N': 'Noite'
 				}
-				console.log({
-					"registration": data.vinculo.matricula,
-					"name": data.nome_usual,
-					"course": data.vinculo.curso,
-					"shift": shifts[findShift],
-					"email": data.email,
-					"disciplines": disciplines
-				})
+				console.log(shifts[findShift], data.url_foto_75x100, data)
 				student = await registerStudent({
 					"registration": data.vinculo.matricula,
 					"name": data.nome_usual,
 					"course": data.vinculo.curso,
 					"shift": shifts[findShift],
 					"email": data.email,
-					"disciplines": disciplines
+					"disciplines": disciplines,
+					"avatar": data.url_foto_75x100
 				})
 			}
 

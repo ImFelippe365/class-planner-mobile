@@ -53,9 +53,7 @@ const Profile = () => {
 				</View>
 			</View>
 
-			<View style={styles.userConfig}>
-				
-			</View>
+			<View style={styles.userConfig}></View>
 		</View>
 	);
 };
