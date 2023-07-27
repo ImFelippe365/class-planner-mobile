@@ -1,4 +1,4 @@
-# Class Planner - Gerenciador de horários de aulas ![Badge](https://img.shields.io/static/v1?label=tailwindcss&message=v3.1.8&color=lightblue&style=flat&logo=TAILWINDCSS)  ![Badge](https://img.shields.io/static/v1?label=next&message=v4.1.3&color=black&style=flat&logo=DJANGO)
+# Class Planner - Gerenciador de horários de aulas ![Badge](https://img.shields.io/static/v1?label=react&message=v18.2.0&color=lightblue&style=flat&logo=REACT)  ![Badge](https://img.shields.io/static/v1?label=expo&message=v48.0.18&color=black&style=flat&logo=expo)
  
 <!-- <br />
 <p align="center">
@@ -35,8 +35,8 @@ Projeto desenvolvido na disciplina de Desenvolvimento de Projetos II, utilizando
 
 ## Tecnologias utilizadas
 
-- Next.js
-- TailwindCSS
+- Expo
+- React Native
 
 ## Instalação
 
