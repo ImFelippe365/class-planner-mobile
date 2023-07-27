@@ -8,12 +8,18 @@
 
 Aplicativo desenvolvido em React Native para exibição das aulas do estudante no no IFRN - Campus Pau dos Ferros, com o intuito de informar quando não houver aula ou a mesma ser substituída.
 
+
+Este projeto funciona juntamente com outras duas aplicações:
+- [Class Planner Web](https://github.com/ImFelippe365/class-planner-web)
+- [Class Planner API](https://github.com/brunamariap/class-planner-api)
+
 ## ⚠️ Importante
 
 Equipe: Felippe Rian & [Bruna Maria](https://github.com/brunamariap)
 
-Projeto desenvolvido na disciplina de Desenvolvimento de Projetos II, utilizando os conhecimentos adquiridos nas demais, como Administração de Banco de Dados, Processo de Software, Arquitetura de Software e Desenvolvimento de Sistemas Distribuídos. 
+Projeto desenvolvido na disciplina de Desenvolvimento de Projetos II, utilizando os conhecimentos adquiridos nas demais, como Administração de Banco de Dados, Processo de Software, Arquitetura de Software e Desenvolvimento de Sistemas Distribuídos.
 
+  
 ## Documentação
 
 - [📄 Requisitos funcionais/não funcionais](https://docs.google.com/document/d/1W0PZumCOEnWrw8nvs900WqyFFRIyaeNj_PJDtZl1DhM/edit?usp=sharing)
